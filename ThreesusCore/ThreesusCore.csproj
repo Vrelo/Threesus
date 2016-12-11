@@ -42,6 +42,7 @@
     <Compile Include="Source\Bots\BoardQualityEvaluators.cs" />
     <Compile Include="Source\Bots\FastDeck.cs" />
     <Compile Include="Source\Bots\IBot.cs" />
+    <Compile Include="Source\Bots\OurBot.cs" />
     <Compile Include="Source\Bots\RandomBot.cs" />
     <Compile Include="Source\Bots\ByteList12.cs" />
     <Compile Include="Source\Bots\StandardBotFramework.cs" />
