@@ -10,9 +10,9 @@ namespace Threesus
 	/// </summary>
 	static class ThreesusAssistant
 	{
-		private static readonly IBot _bot = new StandardBotFramework(6, 3, BoardQualityEvaluators.OpennessMatthew);
+		//private static readonly IBot _bot = new StandardBotFramework(6, 3, BoardQualityEvaluators.OpennessMatthew);
         //private static readonly IBot _bot = new RandomBot();
-        //private static readonly IBot _bot = new OurBot();
+        private static readonly IBot _bot = new OurBot(BoardQualityEvaluators.OpennessMatthew);
         private static string[] chars = { "1", "1", "1", "2", "2", "2", "3", "3"};
 
 		/// <summary>
@@ -74,7 +74,7 @@ namespace Threesus
 				Console.WriteLine("Current total score: {0}", board.GetTotalScore());
 
 				// Get the next card.
-				/*Console.Write("What is the next card? ");
+				Console.Write("What is the next card? ");
 				string nextCardStr;
 				Card nextCard;
 				do
@@ -87,10 +87,10 @@ namespace Threesus
 						goto redo;
 					}
 				}
-				while(nextCardStr.Length != 1 || (nextCard = GetCardFromChar(nextCardStr[0], true)) == null);*/
-                string nextCardStr = chars[new Random().Next(8)];
-                Console.WriteLine("Next Card is: " + nextCardStr);
-                Card nextCard = GetCardFromChar(nextCardStr[0], true);
+				while(nextCardStr.Length != 1 || (nextCard = GetCardFromChar(nextCardStr[0], true)) == null);
+                //string nextCardStr = chars[new Random().Next(8)];
+                //Console.WriteLine("Next Card is: " + nextCardStr);
+                //Card nextCard = GetCardFromChar(nextCardStr[0], true);
 				NextCardHint nextCardHint = GetNextCardHint(nextCard);
 
 				// Choose a move.

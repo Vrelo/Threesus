@@ -96,13 +96,31 @@ namespace Threesus.Bots
 			IntVector2D* newCardCells = stackalloc IntVector2D[4];
             if (shiftedBoard.ShiftInPlace(dir, newCardCells))
             {
+                float quality = 0;
                 if (knownNextCardIndex == ulong.MaxValue) // Special value for bonus card.
                 {
                     return null;
                 }
                 else if (knownNextCardIndex > 0)
-                { }
-                else { }
+                {
+                    FastDeck newDeck = deck;
+					newDeck.Remove(knownNextCardIndex);
+                    for (int i = 0; i < 4; i++)
+                    {
+                        IntVector2D cell = newCardCells[i];
+                        if (cell.X < 0)
+                            continue;
+
+                        FastBoard newBoard = shiftedBoard;
+                        newBoard.SetCardIndex(cell, knownNextCardIndex);
+
+                        quality = _evaluator(newBoard);
+                    }
+                }
+                else {
+                    quality = _evaluator(shiftedBoard);
+                }
+                return quality;
             }
             else {
                 return null;
