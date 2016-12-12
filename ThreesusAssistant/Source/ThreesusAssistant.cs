@@ -12,7 +12,7 @@ namespace Threesus
 	{
 		private static readonly IBot _bot = new StandardBotFramework(6, 3, BoardQualityEvaluators.OpennessMatthew);
         //private static readonly IBot _bot = new RandomBot();
-        private static string[] chars = { "1", "2", "3" };
+        private static string[] chars = { "1", "1", "1", "2", "2", "2", "3", "3"};
 
 		/// <summary>
 		/// Main application entry point.
@@ -87,7 +87,7 @@ namespace Threesus
 					}
 				}
 				while(nextCardStr.Length != 1 || (nextCard = GetCardFromChar(nextCardStr[0], true)) == null);*/
-                string nextCardStr = chars[new Random().Next(3)];
+                string nextCardStr = chars[new Random().Next(8)];
                 Console.WriteLine("Next Card is: " + nextCardStr);
                 Card nextCard = GetCardFromChar(nextCardStr[0], true);
 				NextCardHint nextCardHint = GetNextCardHint(nextCard);
