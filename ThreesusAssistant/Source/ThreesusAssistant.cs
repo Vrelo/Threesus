@@ -11,6 +11,8 @@ namespace Threesus
 	static class ThreesusAssistant
 	{
 		private static readonly IBot _bot = new StandardBotFramework(6, 3, BoardQualityEvaluators.OpennessMatthew);
+        //private static readonly IBot _bot = new RandomBot();
+        private static string[] chars = { "1", "2", "3" };
 
 		/// <summary>
 		/// Main application entry point.
@@ -71,7 +73,7 @@ namespace Threesus
 				Console.WriteLine("Current total score: {0}", board.GetTotalScore());
 
 				// Get the next card.
-				Console.Write("What is the next card? ");
+				/*Console.Write("What is the next card? ");
 				string nextCardStr;
 				Card nextCard;
 				do
@@ -84,7 +86,10 @@ namespace Threesus
 						goto redo;
 					}
 				}
-				while(nextCardStr.Length != 1 || (nextCard = GetCardFromChar(nextCardStr[0], true)) == null);
+				while(nextCardStr.Length != 1 || (nextCard = GetCardFromChar(nextCardStr[0], true)) == null);*/
+                string nextCardStr = chars[new Random().Next(3)];
+                Console.WriteLine("Next Card is: " + nextCardStr);
+                Card nextCard = GetCardFromChar(nextCardStr[0], true);
 				NextCardHint nextCardHint = GetNextCardHint(nextCard);
 
 				// Choose a move.
@@ -108,26 +113,29 @@ namespace Threesus
 				}
 				while(actualDir == null);*/
 				List<IntVector2D> newCardCells = new List<IntVector2D>();
+                List<int> integers = new List<int>();
 				board.Shift(actualDir.Value, newCardCells);
 
 				// Get the new card location.
 				int newCardIndex;
 				if(newCardCells.Count > 1)
 				{
-					Console.WriteLine("Here are the locations where a new card might have been inserted:");
+                    integers.Clear();
+					//Console.WriteLine("Here are the locations where a new card might have been inserted:");
 					for(int y = 0; y < board.Height; y++)
 					{
 						for(int x = 0; x < board.Width; x++)
 						{
 							int index = newCardCells.IndexOf(new IntVector2D(x, y));
-							if(index >= 0)
-								Console.Write((char)('a' + index));
-							else
-								Console.Write('.');
+                            if (index >= 0)
+                                //Console.Write((char)('a' + index));
+                                integers.Add('a' + index);
+                            /*else
+                                Console.Write('.');*/
 						}
-						Console.WriteLine();
+						//Console.WriteLine();
 					}
-					Console.Write("Where was it actually inserted? ");
+					/*Console.Write("Where was it actually inserted? ");
 					do
 					{
 						string indexStr = Console.ReadLine();
@@ -136,7 +144,9 @@ namespace Threesus
 						else
 							newCardIndex = -1;
 					}
-					while(newCardIndex < 0 || newCardIndex >= newCardCells.Count);
+					while(newCardIndex < 0 || newCardIndex >= newCardCells.Count);*/
+                    int place = integers[new Random().Next(integers.Count)];
+                    newCardIndex = place - 'a';
 				}
 				else
 				{
@@ -165,6 +175,7 @@ namespace Threesus
 			}
 
 			Console.WriteLine("FINAL SCORE IS {0}.", board.GetTotalScore());
+            Console.ReadLine();
 		}
 
 		/// <summary>
