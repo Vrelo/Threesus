@@ -101,6 +101,7 @@ namespace Threesus
 
 				/// Automatic approach
 				NextCardHint nextCardHint = GetNextCardHint(deck.DrawNextCard());
+                Console.WriteLine((int)nextCardHint);
 
 				// Choose a move.
 				Console.Write("Thinking...");
