@@ -9,6 +9,13 @@ namespace Threesus.Bots
 {
     public class OurBot : IBot
     {
+        private readonly BoardQualityEvaluator _evaluator;
+
+        public OurBot(BoardQualityEvaluator evaluator) {
+            if (evaluator == null)
+                throw new ArgumentNullException("evaluator");
+            _evaluator = evaluator;
+        }
         /// <summary>
         /// Returns the next move to make based on the state of the specified game, or null to make no move.
         /// </summary>
@@ -89,7 +96,13 @@ namespace Threesus.Bots
 			IntVector2D* newCardCells = stackalloc IntVector2D[4];
             if (shiftedBoard.ShiftInPlace(dir, newCardCells))
             {
- 
+                if (knownNextCardIndex == ulong.MaxValue) // Special value for bonus card.
+                {
+                    return null;
+                }
+                else if (knownNextCardIndex > 0)
+                { }
+                else { }
             }
             else {
                 return null;
