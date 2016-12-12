@@ -13,7 +13,7 @@ namespace Threesus
 		//private static readonly IBot _bot = new StandardBotFramework(6, 3, BoardQualityEvaluators.OpennessMatthew);
         //private static readonly IBot _bot = new RandomBot();
         private static readonly IBot _bot = new OurBot(BoardQualityEvaluators.OpennessMatthew);
-        private static string[] chars = { "1", "1", "1", "2", "2", "2", "3", "3"};
+        private static string[] chars = { "1", "1", "1", "1", "2", "2", "2", "2", "3", "3", "3", "3"};
 
 		/// <summary>
 		/// Main application entry point.
@@ -23,6 +23,7 @@ namespace Threesus
 			// Build the board and initialize the deck.
 			Deck deck = new Deck(new Rand());
 			Board board = new Board();
+
 			Console.WriteLine("Let's initialize the board...");
 			Console.WriteLine("The format for each line should be four characters, each a 1, 2, 3, or any other character to represent an empty space.");
 			for(int y = 0; y < board.Height; y++)
@@ -77,21 +78,29 @@ namespace Threesus
 				Console.Write("What is the next card? ");
 				string nextCardStr;
 				Card nextCard;
-				do
-				{
-					nextCardStr = Console.ReadLine();
-					if(nextCardStr == "undo")
-					{
-						board = boardsStack.Pop();
-						deck = decksStack.Pop();
-						goto redo;
-					}
-				}
-				while(nextCardStr.Length != 1 || (nextCard = GetCardFromChar(nextCardStr[0], true)) == null);
-                //string nextCardStr = chars[new Random().Next(8)];
+
+
+				/// Manual approach
+				//do
+				//{
+				//	nextCardStr = Console.ReadLine();
+				//	if(nextCardStr == "undo")
+				//	{
+				//		board = boardsStack.Pop();
+				//		deck = decksStack.Pop();
+				//		goto redo;
+				//	}
+				//}
+				//while(nextCardStr.Length != 1 || (nextCard = GetCardFromChar(nextCardStr[0], true)) == null);
+                
+				//string nextCardStr = chars[new Random().Next(8)];
                 //Console.WriteLine("Next Card is: " + nextCardStr);
                 //Card nextCard = GetCardFromChar(nextCardStr[0], true);
-				NextCardHint nextCardHint = GetNextCardHint(nextCard);
+				//NextCardHint nextCardHint = GetNextCardHint(nextCard);
+
+
+				/// Automatic approach
+				NextCardHint nextCardHint = GetNextCardHint(deck.DrawNextCard());
 
 				// Choose a move.
 				Console.Write("Thinking...");
@@ -209,6 +218,30 @@ namespace Threesus
 		{
 			NextCardHint nextCardHint;
 			switch(nextCard.Value)
+			{
+				case 1:
+					nextCardHint = NextCardHint.One;
+					break;
+				case 2:
+					nextCardHint = NextCardHint.Two;
+					break;
+				case 3:
+					nextCardHint = NextCardHint.Three;
+					break;
+				default:
+					nextCardHint = NextCardHint.Bonus;
+					break;
+			}
+			return nextCardHint;
+		}
+
+		/// <summary>
+		/// Returns the NextCardHint given the specified next card.
+		/// </summary>
+		private static NextCardHint GetNextCardHint(int idx)
+		{
+			NextCardHint nextCardHint;
+			switch (idx)
 			{
 				case 1:
 					nextCardHint = NextCardHint.One;
