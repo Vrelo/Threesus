@@ -12,6 +12,7 @@ namespace Threesus
 	{
 		private static readonly IBot _bot = new StandardBotFramework(6, 3, BoardQualityEvaluators.OpennessMatthew);
         //private static readonly IBot _bot = new RandomBot();
+        //private static readonly IBot _bot = new OurBot();
         private static string[] chars = { "1", "1", "1", "2", "2", "2", "3", "3"};
 
 		/// <summary>

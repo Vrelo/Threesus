@@ -31,7 +31,8 @@ namespace Threesus.Bots
                 default:
                     throw new NotSupportedException("Unknown NextCardHint '" + nextCardHint + "'.");
             }
-            return null;
+            float quality;
+            return GetBestMoveForBoard(board, deck, knownNextCardIndex, out quality, ref movesEvaluated);
         }
 
         /// <summary>
@@ -40,6 +41,59 @@ namespace Threesus.Bots
         public ShiftDirection? GetNextMove(FastBoard board, FastDeck deck, NextCardHint nextCardHint) {
             long movesEvaluated = 0;
             return GetNextMove(board, deck, nextCardHint, ref movesEvaluated);
+        }
+
+        private ShiftDirection? GetBestMoveForBoard(FastBoard board, FastDeck deck, ulong knownNextCardIndex, out float moveQuality, ref long movesEvaluated)
+        {
+            float? leftQuality = null;
+            float? rightQuality = null;
+            float? upQuality = null;
+            float? downQuality = null;
+            Parallel.Invoke(
+                () =>
+                {
+                    leftQuality = EvaluateMoveForBoard(board, deck, knownNextCardIndex, ShiftDirection.Left);
+                    rightQuality = EvaluateMoveForBoard(board, deck, knownNextCardIndex, ShiftDirection.Right);
+                },
+                () =>
+                {
+                    upQuality = EvaluateMoveForBoard(board, deck, knownNextCardIndex, ShiftDirection.Up);
+                    downQuality = EvaluateMoveForBoard(board, deck, knownNextCardIndex, ShiftDirection.Down);
+                });
+            //movesEvaluated += moves1 + moves2;
+
+            float? bestQuality = leftQuality;
+            ShiftDirection? bestDir = leftQuality != null ? ShiftDirection.Left : (ShiftDirection?)null;
+            if (rightQuality != null && (bestQuality == null || rightQuality.Value > bestQuality.Value))
+            {
+                bestQuality = rightQuality;
+                bestDir = ShiftDirection.Right;
+            }
+            if (upQuality != null && (bestQuality == null || upQuality.Value > bestQuality.Value))
+            {
+                bestQuality = upQuality;
+                bestDir = ShiftDirection.Up;
+            }
+            if (downQuality != null && (bestQuality == null || downQuality.Value > bestQuality.Value))
+            {
+                bestQuality = downQuality;
+                bestDir = ShiftDirection.Down;
+            }
+            moveQuality = bestQuality ?? float.MinValue;
+            return bestDir;
+        }
+
+        private unsafe float? EvaluateMoveForBoard(FastBoard board, FastDeck deck, ulong knownNextCardIndex, ShiftDirection dir)
+        { 
+            FastBoard shiftedBoard = board;
+			IntVector2D* newCardCells = stackalloc IntVector2D[4];
+            if (shiftedBoard.ShiftInPlace(dir, newCardCells))
+            {
+ 
+            }
+            else {
+                return null;
+            }
         }
     }
 }
